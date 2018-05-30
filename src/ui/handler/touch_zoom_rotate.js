@@ -108,10 +108,10 @@ class TouchZoomRotateHandler {
     }
 
     _onStart(e: TouchEvent) {
-        if (e.touches.length !== 2) return;
+        if (e.targetTouches.length !== 2) return;
 
-        const p0 = DOM.mousePos(this._el, e.touches[0]),
-            p1 = DOM.mousePos(this._el, e.touches[1]);
+        const p0 = DOM.mousePos(this._el, e.targetTouches[0]),
+            p1 = DOM.mousePos(this._el, e.targetTouches[1]);
 
         this._startVec = p0.sub(p1);
         this._startScale = this._map.transform.scale;
@@ -119,15 +119,15 @@ class TouchZoomRotateHandler {
         this._gestureIntent = undefined;
         this._inertia = [];
 
-        window.document.addEventListener('touchmove', this._onMove, false);
-        window.document.addEventListener('touchend', this._onEnd, false);
+        this._el.addEventListener('touchmove', this._onMove, false);
+        this._el.addEventListener('touchend', this._onEnd, false);
     }
 
     _onMove(e: TouchEvent) {
-        if (e.touches.length !== 2) return;
+        if (e.targetTouches.length !== 2) return;
 
-        const p0 = DOM.mousePos(this._el, e.touches[0]),
-            p1 = DOM.mousePos(this._el, e.touches[1]),
+        const p0 = DOM.mousePos(this._el, e.targetTouches[0]),
+            p1 = DOM.mousePos(this._el, e.targetTouches[1]),
             p = p0.add(p1).div(2),
             vec = p0.sub(p1),
             scale = vec.mag() / this._startVec.mag(),
@@ -173,8 +173,8 @@ class TouchZoomRotateHandler {
     }
 
     _onEnd(e: TouchEvent) {
-        window.document.removeEventListener('touchmove', this._onMove);
-        window.document.removeEventListener('touchend', this._onEnd);
+        this._el.removeEventListener('touchmove', this._onMove);
+        this._el.removeEventListener('touchend', this._onEnd);
         this._drainInertiaBuffer();
 
         const inertia = this._inertia,

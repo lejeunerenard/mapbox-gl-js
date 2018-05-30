@@ -95,9 +95,9 @@ class DragPanHandler {
         if (this._ignoreEvent(e)) return;
         if (this.isActive()) return;
 
-        if (e.touches) {
-            window.document.addEventListener('touchmove', this._onMove);
-            window.document.addEventListener('touchend', this._onTouchEnd);
+        if (e.targetTouches) {
+            this._el.addEventListener('touchmove', this._onMove);
+            this._el.addEventListener('touchend', this._onTouchEnd);
         } else {
             window.document.addEventListener('mousemove', this._onMove);
             window.document.addEventListener('mouseup', this._onMouseUp);
@@ -229,8 +229,8 @@ class DragPanHandler {
     _onTouchEnd(e: TouchEvent) {
         if (this._ignoreEvent(e)) return;
         this._onUp(e);
-        window.document.removeEventListener('touchmove', this._onMove);
-        window.document.removeEventListener('touchend', this._onTouchEnd);
+        this._el.removeEventListener('touchmove', this._onMove);
+        this._el.removeEventListener('touchend', this._onTouchEnd);
     }
 
     _fireEvent(type: string, e: ?Event) {
@@ -242,8 +242,8 @@ class DragPanHandler {
 
         if (map.boxZoom && map.boxZoom.isActive()) return true;
         if (map.dragRotate && map.dragRotate.isActive()) return true;
-        if (e.touches) {
-            return (e.touches.length > 1);
+        if (e.targetTouches) {
+            return (e.targetTouches.length > 1);
         } else {
             if (e.ctrlKey) return true;
             return e.type !== 'mousemove' && e.button && e.button !== 0; // left button

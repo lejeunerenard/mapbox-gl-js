@@ -61,7 +61,7 @@ exports.suppressClick = function() {
 
 exports.mousePos = function (el: HTMLElement, e: any) {
     const rect = el.getBoundingClientRect();
-    e = e.touches ? e.touches[0] : e;
+    e = e.targetTouches ? e.targetTouches[0] : e;
     return new Point(
         e.clientX - rect.left - el.clientLeft,
         e.clientY - rect.top - el.clientTop
@@ -71,7 +71,7 @@ exports.mousePos = function (el: HTMLElement, e: any) {
 exports.touchPos = function (el: HTMLElement, e: any) {
     const rect = el.getBoundingClientRect(),
         points = [];
-    const touches = (e.type === 'touchend') ? e.changedTouches : e.touches;
+    const touches = (e.type === 'touchend') ? e.changedTouches : e.targetTouches;
     for (let i = 0; i < touches.length; i++) {
         points.push(new Point(
             touches[i].clientX - rect.left - el.clientLeft,
